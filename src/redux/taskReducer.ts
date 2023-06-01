@@ -1,17 +1,17 @@
-interface Task {
+export type Task = {
     id: number;
     date: string;
     title: string;
     status: string;
 }
 
-interface TasksState {
+export type TasksState = {
     completedTasks: Task[];
     todayTasks: Task[];
     upcomingTasks: Task[];
 }
 
-interface UpdateTaskStatusAction {
+type UpdateTaskStatusAction = {
     type: 'UPDATE_TASK_STATUS';
     payload: {
         taskId: number;
@@ -22,9 +22,81 @@ interface UpdateTaskStatusAction {
 type ActionType = UpdateTaskStatusAction;
 
 const initialState: TasksState = {
-    completedTasks: [],
-    todayTasks: [],
-    upcomingTasks: [],
+    completedTasks: [
+        {
+            id: 1,
+            date: '01.05.2023',
+            title: 'Тестовое - 1',
+            status: 'completed',
+        },
+        {
+            id: 2,
+            date: '01.05.2023',
+            title: 'Тестовое - 2',
+            status: 'completed',
+        },
+        {
+            id: 3,
+            date: '01.05.2023',
+            title: 'Тестовое - 3',
+            status: 'completed',
+        },
+        {
+            id: 4,
+            date: '01.05.2023',
+            title: 'Тестовое - 4',
+            status: 'completed',
+        }],
+    todayTasks: [
+        {
+            id: 5,
+            date: '02.05.2023',
+            title: 'Собеседование - 1',
+            status: 'today',
+        },
+        {
+            id: 6,
+            date: '02.05.2023',
+            title: 'Собеседование - 2',
+            status: 'today',
+        },
+        {
+            id: 7,
+            date: '02.05.2023',
+            title: 'Собеседование - 3',
+            status: 'today',
+        },
+        {
+            id: 8,
+            date: '02.05.2023',
+            title: 'Собеседование - 4',
+            status: 'today',
+        }],
+    upcomingTasks: [
+        {
+            id: 9,
+            date: '03.05.2023',
+            title: 'Проект - 1',
+            status: 'upcoming',
+        },
+        {
+            id: 10,
+            date: '03.05.2023',
+            title: 'Проект - 2',
+            status: 'upcoming',
+        },
+        {
+            id: 11,
+            date: '03.05.2023',
+            title: 'Проект - 3',
+            status: 'upcoming',
+        },
+        {
+            id: 12,
+            date: '03.05.2023',
+            title: 'Проект - 4',
+            status: 'upcoming',
+        }],
 };
 
 export const tasksReducer = (state: TasksState = initialState, action: ActionType): TasksState => {
@@ -32,21 +104,17 @@ export const tasksReducer = (state: TasksState = initialState, action: ActionTyp
         case 'UPDATE_TASK_STATUS':
             const {taskId, newStatus} = action.payload;
             const {completedTasks, todayTasks, upcomingTasks} = state;
+            const updatedTasks = [...completedTasks, ...todayTasks, ...upcomingTasks].map(task => {
+                if (task.id === taskId) {
+                    return {...task, status: newStatus};
+                }
+                return task;
+            });
 
-            // Находим задачу по taskId и обновляем её статус
-            const updatedTask = findTaskById([...completedTasks, ...todayTasks, ...upcomingTasks], taskId);
-
-            if (!updatedTask) {
-                return state; // Возвращаем текущее состояние, если задача не найдена
-            }
-
-            updatedTask.status = newStatus;
-
-            // Обновляем состояние задач в соответствующих колонках
             return {
-                completedTasks: newStatus === 'completed' ? [...completedTasks, updatedTask] : completedTasks.filter(task => task.id !== taskId),
-                todayTasks: newStatus === 'today' ? [...todayTasks, updatedTask] : todayTasks.filter(task => task.id !== taskId),
-                upcomingTasks: newStatus === 'upcoming' ? [...upcomingTasks, updatedTask] : upcomingTasks.filter(task => task.id !== taskId),
+                completedTasks: updatedTasks.filter(task => task.status === 'completed'),
+                todayTasks: updatedTasks.filter(task => task.status === 'today'),
+                upcomingTasks: updatedTasks.filter(task => task.status === 'upcoming'),
             };
 
         default:
@@ -54,6 +122,12 @@ export const tasksReducer = (state: TasksState = initialState, action: ActionTyp
     }
 };
 
-const findTaskById = (tasks: Task[], taskId: number): Task | undefined => {
-    return tasks.find(task => task.id === taskId);
-};
+
+export const updateTaskStatusAC = (taskId: number, newStatus: string) => {
+    return {
+        type: 'UPDATE_TASK_STATUS',
+        payload: {
+            taskId, newStatus
+        }
+    }
+}

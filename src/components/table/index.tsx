@@ -3,122 +3,115 @@ import {
     AccordionButton,
     AccordionIcon,
     AccordionItem,
-    AccordionPanel,
     Box,
-    Code,
-    Heading, Select,
     Table,
     TableCaption,
     TableContainer,
     Tbody,
     Td,
-    Text,
     Th,
     Thead,
     Tr
 } from "@chakra-ui/react";
 import React, {Fragment} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {TasksState, updateTaskStatusAC} from "../../redux/taskReducer";
+import {TaskRow} from "./taskRow";
 
 
-export const Example = () => {
+export const TableTasks = () => {
+
+
+    const {completedTasks, todayTasks, upcomingTasks} = useSelector((state: TasksState) => state);
+    const dispatch = useDispatch();
+
+    const handleTaskStatusChange = (taskId: number, newStatus: string) => {
+        dispatch(updateTaskStatusAC(taskId, newStatus));
+    };
+
+
     return (
-        <Box p="6">
+        <Box minW='750px' >
             <Accordion defaultIndex={[0]} reduceMotion>
-                <TableContainer>
-                    <Table variant="simple">
-                        <TableCaption>Тестовое задание для ИП Деревесникова Наталия Андреевна</TableCaption>
-                        <Thead>
-                            <Tr>
-                                <Th>Задачи</Th>
-                                <Th>Дата</Th>
-                                <Th>Название</Th>
-                                <Th>Статус</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            <AccordionItem as={Fragment}>
-                                <Tr bgColor={'#E1E1FB'}>
-                                    <Td>
-                                        <AccordionButton>
-                                            <Box>
-                                                Выполненные задачи
-                                            </Box>
-                                            <AccordionIcon/>
-                                        </AccordionButton>
-                                    </Td>
-                                    <Td></Td>
-                                    <Td></Td>
-                                    <Td></Td>
+                <TableContainer width='1000vh'  >
+                    <Box width="100%">
+                        <Table variant="simple"   layout="fixed" whiteSpace="nowrap" overflowX='auto'>
+                            <TableCaption>Тестовое задание для ИП Деревесникова Наталия Андреевна</TableCaption>
+                            <Thead>
+                                <Tr>
+                                    <Th maxW="25%">Задачи</Th>
+                                    <Th maxW="25%">Дата</Th>
+                                    <Th maxW="25%">Название</Th>
+                                    <Th maxW="25%">Статус</Th>
                                 </Tr>
-                                <AccordionPanel as={Tr}>
-                                    <Td/>
-                                    <Td>01.05.2023</Td>
-                                    <Td>Тестовое</Td>
-                                    <Td>
-                                        <Select >
-                                            <option value='option1'>Выполнено</option>
-                                            <option value='option2'>На паузе</option>
-                                            <option value='option3'>В работе</option>
-                                        </Select>
-                                    </Td>
-                                </AccordionPanel>
-                            </AccordionItem>
-                            <AccordionItem as={Fragment}>
-                                <Tr bgColor={'#E1E1FB'}>
-                                    <Td>
-                                        <AccordionButton>
-                                            <Box>
-                                                Задачи на сегодня
-                                            </Box>
-                                            <AccordionIcon/>
-                                        </AccordionButton>
-                                    </Td>
-                                    <Td></Td>
-                                    <Td></Td>
-                                    <Td></Td>
-                                </Tr>
-                                <AccordionPanel as={Tr}>
-                                    <Td/>
-                                    <Td>02.05.2023</Td>
-                                    <Td>Собеседование</Td>
-                                    <Td>
-                                        <Select >
-                                            <option value='option1'>Выполнено</option>
-                                            <option value='option2'>На паузе</option>
-                                            <option value='option3'>В работе</option>
-                                        </Select>
-                                    </Td>
-                                </AccordionPanel>
-                            </AccordionItem>
-                            <AccordionItem as={Fragment}>
-                                <Tr bgColor={'#E1E1FB'}>
-                                    <Td>
-                                        <AccordionButton>
-                                            <Box>
-                                                Предстоящие задачи
-                                            </Box>
-                                            <AccordionIcon/>
-                                        </AccordionButton>
-                                    </Td>
-                                    <Td></Td>
-                                    <Td></Td>
-                                    <Td></Td>
-                                </Tr>
-                                <AccordionPanel as={Tr}>
-                                    <Td/>
-                                    <Td>03.05.2023</Td>
-                                    <Td>Проект</Td>
-                                    <Td>
-                                        <Select >
-                                            <option value='option1'>Выполнено</option>
-                                            <option value='option2'>На паузе</option>
-                                            <option value='option3'>В работе</option>
-                                        </Select>
-                                    </Td>
-                                </AccordionPanel>
-                            </AccordionItem>
-                        </Tbody>
-                    </Table>
+                            </Thead>
+                            <Tbody>
+                                <AccordionItem as={Fragment}>
+                                    <Tr bgColor="#E1E1FB">
+                                        <Td>
+                                            <AccordionButton>
+                                                <Box flex="1">Выполненные задачи</Box>
+                                                <AccordionIcon/>
+                                            </AccordionButton>
+                                        </Td>
+                                        <Td></Td>
+                                        <Td></Td>
+                                        <Td></Td>
+                                    </Tr>
+                                    {completedTasks.map((task) => (
+                                        <TaskRow
+                                            key={task.id}
+                                            task={task}
+                                            onTaskStatusChange={handleTaskStatusChange}
+                                            bgColor={task.status === "completed" ? "white" : task.status === "today" ? "#71FACA" : "#FFCCDD"}
+                                        />
+                                    ))}
+                                </AccordionItem>
+                                <AccordionItem as={Fragment}>
+                                    <Tr bgColor="#E1E1FB">
+                                        <Td>
+                                            <AccordionButton>
+                                                <Box flex="1">Задачи на сегодня</Box>
+                                                <AccordionIcon/>
+                                            </AccordionButton>
+                                        </Td>
+                                        <Td></Td>
+                                        <Td></Td>
+                                        <Td></Td>
+                                    </Tr>
+                                    {todayTasks.map((task) => (
+                                        <TaskRow
+                                            key={task.id}
+                                            task={task}
+                                            onTaskStatusChange={handleTaskStatusChange}
+                                            bgColor={task.status === "completed" ? "white" : task.status === "today" ? "#71FACA" : "#FFCCDD"}
+                                        />
+                                    ))}
+                                </AccordionItem>
+                                <AccordionItem as={Fragment}>
+                                    <Tr bgColor="#E1E1FB">
+                                        <Td>
+                                            <AccordionButton>
+                                                <Box flex="1">Предстоящие задачи</Box>
+                                                <AccordionIcon/>
+                                            </AccordionButton>
+                                        </Td>
+                                        <Td></Td>
+                                        <Td></Td>
+                                        <Td></Td>
+                                    </Tr>
+                                    {upcomingTasks.map((task) => (
+                                        <TaskRow
+                                            key={task.id}
+                                            task={task}
+                                            onTaskStatusChange={handleTaskStatusChange}
+                                            bgColor={task.status === "completed" ? "white" : task.status === "today" ? "#71FACA" : "#FFCCDD"}
+                                        />
+                                    ))}
+                                </AccordionItem>
+                            </Tbody>
+                        </Table>
+                    </Box>
                 </TableContainer>
             </Accordion>
         </Box>
