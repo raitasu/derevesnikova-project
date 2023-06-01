@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/derevesnikova-project/static/css/main.e6c13ad2.css",
+    "main.js": "/derevesnikova-project/static/js/main.fc35cda6.js",
+    "static/js/787.20f5c801.chunk.js": "/derevesnikova-project/static/js/787.20f5c801.chunk.js",
+    "index.html": "/derevesnikova-project/index.html",
+    "main.e6c13ad2.css.map": "/derevesnikova-project/static/css/main.e6c13ad2.css.map",
+    "main.fc35cda6.js.map": "/derevesnikova-project/static/js/main.fc35cda6.js.map",
+    "787.20f5c801.chunk.js.map": "/derevesnikova-project/static/js/787.20f5c801.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.fc35cda6.js"
+  ]
+}
